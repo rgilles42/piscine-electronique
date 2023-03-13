@@ -6,6 +6,6 @@ int main(void){
     DDRD = 0x00;            // Configure PORTD as input
 
     while (1)
-        PORTB = ((PIND & (1 << 2)) ^ 1 << 2) >> 2; // AND the PIND value with 0b0000100 to isolate value of PD2; flip it, then shift right it by 2 to place it at 0b000000X
+        PORTB = ((PIND & (1 << 2)) ^ 1 << 2) >> 2; // AND the PIND value with 0b0000100 to isolate value of PD2; flip it (because button pressed = 0), then shift right it by 2 to place it at 0b000000X
     return 0;
 }
