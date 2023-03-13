@@ -15,3 +15,13 @@ hex: ${NAME}.o
 
 flash: 
 	avrdude -c arduino -p ATMEGA328P -P ${PORT} -b 115200 -U flash:w:${NAME}.hex
+
+clean:
+	rm -rf *.o *.bin
+
+fclean: clean
+	rm -rf *.hex
+
+re: fclean all
+
+.PHONY: hex flash all clean fclean re
