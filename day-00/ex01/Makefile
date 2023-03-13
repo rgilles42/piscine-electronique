@@ -1,0 +1,17 @@
+NAME=main
+
+CC=avr-gcc
+OBJCOPY=avr-objcopy
+CFLAGS=-Os -DF_CPU=16000000UL -mmcu=atmega328p
+
+PORT= /dev/ttyUSB0
+
+
+all: hex flash
+
+hex: ${NAME}.o
+	${CC} -o ${NAME}.bin ${NAME}.o
+	${OBJCOPY} -O ihex -R .eeprom ${NAME}.bin ${NAME}.hex
+
+flash: 
+	avrdude -c arduino -p ATMEGA328P -P ${PORT} -b 115200 -U flash:w:${NAME}.hex
