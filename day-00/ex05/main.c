@@ -2,7 +2,7 @@
 #include <util/delay.h>
 
 void wait_millisec(void) {
-    for (unsigned long i = 0; i < 2462; i++) // This loop is apparently taking 6.5 MCU cycles and we need to wait 0.001s -> 0.001/(6.5/16000000) = 2,461.538
+    for (unsigned long i = 0; i < 2133; i++) // This loop is apparently taking 7.5 MCU cycles and we need to wait 0.001s -> 0.001/(7.5/16000000) = 2,133.333333
         __asm__ __volatile__("nop");
 }
 
