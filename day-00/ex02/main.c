@@ -1,7 +1,7 @@
 #include <avr/io.h>
 
 void wait_half_sec(void) {
-    for (unsigned long i = 0; i < 1066666; i++)
+    for (unsigned long i = 0; i < 1066667; i++) // This loop is apparently taking 7.5 MCU cycles -> 0.5/(7.5/16000000) = 1.066.666,666..
         __asm__ __volatile__("nop");
 }
 
