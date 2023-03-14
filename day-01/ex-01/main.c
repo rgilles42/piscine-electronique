@@ -10,8 +10,8 @@ int main(void) {
 
     ICR1 = 62499;                                              // Set ICR1/TOP at 62500 ticks (with a pre-scaler at 256, it takes 62500 ticks to reach 1sec)
     OCR1A = 6250;                                              // Set the Compare A value at 10% of TOP value
-    TCCR1A |= (1 << COM1A1) | (1 << WGM11);                    // Set Compare Output A Mode to 10; Set mode to Fast PWM 14
-    TCCR1B |= (1 << WGM13) | (1 << WGM12) | (1 << CS12);       // Set mode to Fast PWM 14; Set TC1 pre-scaler up to 256; start the timer
+    TCCR1A |= (1 << COM1A1) | (1 << WGM11);                    // Set Compare Output A Mode to 10 (Set OCA1 at BOTTOM, clear it at Compare); Set TC1 mode to Fast PWM ICR1 (mode 14)
+    TCCR1B |= (1 << WGM13) | (1 << WGM12) | (1 << CS12);       // Set TC1 mode to Fast PWM 14; Set TC1 pre-scaler up to 256 (this starts the timer)
 
     while (1) {
         ;
