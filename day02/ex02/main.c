@@ -11,9 +11,9 @@ ISR(INT0_vect) {
         PORTB = counter & 0b00000111;
         PORTB |= counter >> 3 << 4;
     }
-    _delay_ms(1);                           // Ignore bounce-back.
-    falling_edge ^= 1;                      // Next interrupt will be for rising edge.
-    EIFR |= _BV(INT0);                      // Clear the interrupt flag for any bouncing that happened during the pause.
+    _delay_ms(1);                                               // Ignore bounce-back.
+    falling_edge ^= 1;                                          // Next interrupt will be for rising edge.
+    EIFR |= _BV(INT0);                                          // Clear the interrupt flag for any bouncing that happened during the pause.
 }
 
 ISR(PCINT2_vect) {
@@ -23,9 +23,9 @@ ISR(PCINT2_vect) {
         PORTB = counter & 0b00000111;
         PORTB |= counter >> 3 << 4;
     }
-    _delay_ms(1);                           // Ignore bounce-back.
-    falling_edge ^= 1;                      // Next interrupt will be for rising edge.
-    EIFR |= _BV(INT0);                      // Clear the interrupt flag for any bouncing that happened during the pause.
+    _delay_ms(1);                                               // Ignore bounce-back.
+    falling_edge ^= 1;                                          // Next interrupt will be for rising edge.
+    EIFR |= _BV(INT0);                                          // Clear the interrupt flag for any bouncing that happened during the pause.
 }
 
 
@@ -38,8 +38,8 @@ int main(void) {
     EICRA = _BV(ISC00);                                         // Set External Interrupt Control to React To Any Logical Change mode for INT0.
     EIMSK = _BV(INT0);                                          // Declare INT0 in the External Interrupt Mask Register
 
-    PCMSK2 = _BV(PCINT20);
-    PCICR = _BV(PCIE2);
+    PCICR = _BV(PCIE2);                                         // Enable Pin Change Interrupt for PCINT pin group 2.
+    PCMSK2 = _BV(PCINT20);                                      // Enable PCINT20 in the Pin Change Mask Register for PCINT pin group 2
     sei();
     while (1);
 }
