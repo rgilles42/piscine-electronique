@@ -5,14 +5,14 @@
 volatile uint8_t flag = 0;
 
 ISR(TIMER0_OVF_vect) {                                          // We know that our overflow interrupt will be triggered each millisecond
-    static uint8_t is_rising = 0;
+    static uint8_t is_rising = 1;
 
-    if (OCR1A == 100 || OCR1A == 0)                           // If we are at 0% or 100% duty cycle, go back. 
-        is_rising ^=1;
     if (is_rising)
-        OCR1A += 1;                                            // We want the PWM duty cycle to grow from 0 to 16000 in 500 ms => 16000/500 = 32
+        OCR1A += 1;                                             // We want the PWM duty cycle to grow from 0 to 16000 in 500 ms => 16000/500 = 32
     else
-        OCR1A -= 1;                                            // idem but in the other direction
+        OCR1A -= 1;                                             // idem but in the other direction
+    if (OCR1A == 100 || OCR1A == 0)                             // If we are at 0% or 100% duty cycle, change direction. 
+        is_rising ^=1;
 }
 
 int main(void) {
