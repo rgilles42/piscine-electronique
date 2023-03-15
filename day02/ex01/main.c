@@ -2,8 +2,6 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-volatile uint8_t flag = 0;
-
 ISR(TIMER0_OVF_vect) {                                          // We know that our overflow interrupt will be triggered each millisecond
     static uint8_t is_rising = 1;
 
