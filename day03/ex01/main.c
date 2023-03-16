@@ -12,11 +12,11 @@ void	uart_init(uint32_t baudrate) {
 
 void	uart_printstr(uint8_t* string) {
 	while (*string) {
-		while (!(UCSR0A & (1<<UDRE0)));							// Wait for the transmission buffer to be cleared.
+		while (!(UCSR0A & _BV(UDRE0)));							// Wait for the transmission buffer to be cleared.
 		UDR0 = *string;											// Place character into transmission buffer.
 		++string;
 	}
-	while (!(UCSR0A & (1<<UDRE0)));								// Send '\0'
+	while (!(UCSR0A & _BV(UDRE0)));								// Send '\0'
 	UDR0 = *string;
 }
 
