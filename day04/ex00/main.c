@@ -48,6 +48,7 @@ int		i2c_start(void){
 
 void	i2c_stop(void){
 	TWCR = _BV(TWINT) | _BV(TWEN) | _BV(TWSTO); // Send STOP condition.
+	TWCR &= ~(_BV(TWEN));						// Disable TWI
 }
 
 int		main(void) {
