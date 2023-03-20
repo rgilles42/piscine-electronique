@@ -6,7 +6,7 @@ CFLAGS=-Os -DF_CPU=16000000UL -mmcu=atmega328p
 
 PORT= /dev/ttyUSB0
 
-SOURCES = main.c
+SOURCES = main.c uart.c
 OBJS = $(subst .c,.o,$(SOURCES))
 
 all: hex flash connect
