@@ -42,24 +42,24 @@ uint8_t	invalid_input() {
 }
 
 void	set_rgb(uint8_t r, uint8_t g, uint8_t b) {
-	OCR0B = r;
-	OCR0A = g;
-	OCR2B = b;
+	OCR0B = 0xFF - r;
+	OCR0A = 0xFF - g;
+	OCR2B = 0xFF - b;
 }
 
 void	init_rgb() {
-	DDRD = _BV(PD3) | _BV(PD5) | _BV(PD6);							// Set PD3/OC2B, PD5/OC0B and PD6/OC0A as outputs.
+	DDRD = _BV(PD3) | _BV(PD5) | _BV(PD6);														// Set PD3/OC2B, PD5/OC0B and PD6/OC0A as outputs.
 
-    TCNT0 = 0;														// Initialise TC0 value to 0.
-	OCR0A = 0;														// Set OCR0A to 0% of TOP (0xFF)
-	OCR0B = 0;														// Set OCR0B to 0% of TOP (0xFF)
-	TCCR0A = _BV(COM0A1) | _BV(COM0B1) | _BV(WGM01) | _BV(WGM00);	// Set Compare Output A & B Mode to COM0X1:0 = 10 (Set OC0X at BOTTOM, clear it at Compare); Set TC0 mode to Fast PWM 0xFF (WGM02:0 = 3)
-    TCCR0B = _BV(CS00);               								// Set up TC0 pre-scaler to 1 (this starts the timer)
+    TCNT0 = 0;																					// Initialise TC0 value to 0.
+	OCR0A = 0xFF;																				// Set OCR0A to 100% of TOP (0xFF) => duty cycle of 0% in inverted Compare Output mode (thus avoiding the spike)
+	OCR0B = 0xFF;																				// Set OCR0B to 100% of TOP (0xFF) => duty cycle of 0% in inverted Compare Output mode (thus avoiding the spike)
+	TCCR0A = _BV(COM0A1) | _BV(COM0A0) | _BV(COM0B1) | _BV(COM0B0) | _BV(WGM01) | _BV(WGM00);	// Set Compare Output X Mode to COM0X1:0 = 11 (Clear OC0X at BOTTOM, set at Compare); Set TC0 mode to Fast PWM 0xFF (WGM02:0 = 3)
+    TCCR0B = _BV(CS00);               															// Set up TC0 pre-scaler to 1 (this starts the timer)
 
-	TCNT2 = 0;														// Initialise TC2 value to 0.
-	OCR2B = 0;														// Set OCR2B to 0% of TOP (0xFF)
-	TCCR2A = _BV(COM2B1) | _BV(WGM21) | _BV(WGM20);					// Set Compare Output B Mode to COM2B1:0 = 10 (Set OC2B at BOTTOM, clear it at Compare); Set TC2 mode to Fast PWM 0xFF (WGM22:0 = 3)
-	TCCR2B = _BV(CS20);												// Set up TC2 pre-scaler to 1 (this starts the timer)
+	TCNT2 = 0;																					// Initialise TC2 value to 0.
+	OCR2B = 0xFF;																				// Set OCR2B to 0% of TOP (0xFF)
+	TCCR2A = _BV(COM2B1) | _BV(COM2B0) | _BV(WGM21) | _BV(WGM20);								// Set Compare Output B Mode to COM2B1:0 = 11 (Clear OC2B at BOTTOM, set at Compare); Set TC2 mode to Fast PWM 0xFF (WGM22:0 = 3)
+	TCCR2B = _BV(CS20);																			// Set up TC2 pre-scaler to 1 (this starts the timer)
 }
 
 int main(void) {
