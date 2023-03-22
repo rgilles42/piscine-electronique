@@ -11,7 +11,7 @@ void	uart_putstr(volatile uint8_t* string);
 ISR(ADC_vect) {
 	static uint8_t	count = 0;
 	uart_puthex(ADCH);
-	if (count != 0)
+	if (count != 2)
 		uart_putstr(", ");
 	else {
 		uart_putstr("\r\n");
@@ -21,14 +21,14 @@ ISR(ADC_vect) {
 	if (count == 3)
 		count = 0;
 	ADMUX = _BV(REFS0) | _BV(ADLAR) | count;
-	ADCSRA |= _BV(ADSC);
+	ADCSRA |= _BV(ADSC);																			// Safe manual request to make sure no undesired conversion is in the queue.
 }
 
 int main(void) {
 	uart_init(115200);
 
 	ADMUX = _BV(REFS0) | _BV(ADLAR);																// Set ADC Ref value to AVCC; Set result left alignment for 8-bit reading
-	ADCSRA = _BV(ADEN) | _BV(ADSC) | _BV(ADATE) | _BV(ADIE) | _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0);	// Enable ADC; Perform first measure; Enable auto-trigger; Enable measure complete interrupt; Set prescaler to 128
+	ADCSRA = _BV(ADEN) | _BV(ADSC) | _BV(ADIE) | _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0);				// Enable ADC; Perform first measure; !No auto-trigger!; Enable measure complete interrupt; Set prescaler to 128
 
 	sei();
 	while (1);

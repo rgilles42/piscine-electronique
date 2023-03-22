@@ -9,16 +9,17 @@ void	uart_puthex(uint8_t c);
 void	uart_putstr(volatile uint8_t* string);
 
 ISR(ADC_vect) {
-	uart_puthex(ADCH);
+	uart_putnbr(ADC - 342);
 	uart_putstr("\r\n");
 	_delay_ms(20);
+
 }
 
 int main(void) {
 	uart_init(115200);
 
-	ADMUX = _BV(REFS0) | _BV(ADLAR);																// Set ADC Ref value to AVCC; Set result left alignment for 8-bit reading
-	ADCSRA = _BV(ADEN) | _BV(ADSC) | _BV(ADATE) | _BV(ADIE) | _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0);	// Enable ADC; Perform first measure; Enable auto-trigger (free running); Enable interrupt; Set prescaler to 128
+	ADMUX = _BV(REFS1) | _BV(REFS0) | _BV(MUX3) ;													// Set ADC Ref value to internal 1.1V; Select input ADC8.
+	ADCSRA = _BV(ADEN) | _BV(ADSC) | _BV(ADATE) | _BV(ADIE) | _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0);	// Enable ADC; Perform first measure; Enable auto-trigger; Enable measure complete interrupt; Set prescaler to 128
 
 	sei();
 	while (1);
