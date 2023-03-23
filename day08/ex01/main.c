@@ -19,7 +19,7 @@ typedef	struct	s_RGB {										// APA102 parses colours in BGR format.
 	uint8_t r;
 }				t_RGB;
 
-void inline SPI_MasterInit(void) {
+void SPI_MasterInit(void) {
 	DDR_SPI = _BV(P_MOSI) | _BV(P_SCK) | _BV(P_SS);		// Set MOSI, SCK and SS output.
 	SPCR = _BV(SPE) | _BV(MSTR) | _BV(SPR0);				// Enable SPI, Master, set clock rate fck/16
 }
@@ -29,7 +29,7 @@ void inline SPI_write(char cData) {
 	while(!(SPSR & _BV(SPIF)));								// Wait for transmission complete
 }
 
-void inline set_leds(t_RGB* led_array, uint16_t nb_leds, uint8_t brightness)
+void set_leds(t_RGB* led_array, uint16_t nb_leds, uint8_t brightness)
 {
 	uint8_t*	colours = (uint8_t*)led_array;
  
