@@ -17,18 +17,18 @@
 #define EXP_CNF0_REG	0x06
 #define EXP_CNF1_REG	0x07
 
-#define	disp_d1			4
-#define	disp_d2			5
-#define	disp_d3			6
-#define	disp_d4			7
-#define	disp_a			0
-#define	disp_b			1
-#define	disp_c			2
-#define	disp_d			3
-#define	disp_e			4
-#define	disp_f			5
-#define	disp_g			6
-#define	disp_dot		7
+#define	disp_d1			0x04
+#define	disp_d2			0x05
+#define	disp_d3			0x06
+#define	disp_d4			0x07
+#define	disp_a			0x00
+#define	disp_b			0x01
+#define	disp_c			0x02
+#define	disp_d			0x03
+#define	disp_e			0x04
+#define	disp_f			0x05
+#define	disp_g			0x06
+#define	disp_dot		0x07
 
 void	uart_init(uint32_t baudrate);
 void	uart_tx(uint8_t character);
@@ -72,7 +72,7 @@ void	exp_read_register(uint8_t reg_index) {
 
 void	disp_init() {
 	regs[EXP_CNF0_REG] &= ~_BV(disp_d1) & ~_BV(disp_d2) & ~_BV(disp_d3) & ~_BV(disp_d4);
-	regs[EXP_CNF1_REG] &= ~_BV(disp_a) & ~_BV(disp_b) & ~_BV(disp_c) & ~_BV(disp_d) & ~_BV(disp_e) & ~_BV(disp_f) & ~_BV(disp_g) & ~_BV(disp_dot);
+	regs[EXP_CNF1_REG] &= (uint8_t)~_BV(disp_a) & ~_BV(disp_b) & ~_BV(disp_c) & ~_BV(disp_d) & ~_BV(disp_e) & ~_BV(disp_f) & ~_BV(disp_g) & ~_BV(disp_dot);
 	exp_write_register(EXP_CNF0_REG);
 	exp_write_register(EXP_CNF1_REG);
 }
@@ -85,12 +85,59 @@ void	disp_set(uint8_t digit, uint8_t segments) {
 	exp_write_register(EXP_OUT1_REG);
 }
 
+uint8_t	compose_segments(uint8_t digit, uint8_t with_comma) {
+	uint8_t segments = 0x00;
+	switch (digit) {
+		case 0:
+		case '0':
+			segments = (uint8_t)~(_BV(disp_g) | _BV(disp_dot));
+			break;
+		case 1:
+		case '1':
+			segments = _BV(disp_b) | _BV(disp_c);
+			break;
+		case 2:
+		case '2':
+			segments = (uint8_t)~(_BV(disp_c) | _BV(disp_f) | _BV(disp_dot));
+			break;
+		case 3:
+		case '3':
+			segments = (uint8_t)~(_BV(disp_e) | _BV(disp_f) | _BV(disp_dot));
+			break;
+		case 4:
+		case '4':
+			segments = _BV(disp_b) | _BV(disp_c) | _BV(disp_f) | _BV(disp_g);
+			break;
+		case 5:
+		case '5':
+			segments = (uint8_t)~(_BV(disp_b) | _BV(disp_e) | _BV(disp_dot));
+			break;
+		case 6:
+		case '6':
+			segments = (uint8_t)~(_BV(disp_b) | _BV(disp_dot));
+			break;
+		case 7:
+		case '7':
+			segments = _BV(disp_a) | _BV(disp_b) | _BV(disp_c);
+			break;
+		case 8:
+		case '8':
+			segments = (uint8_t)~_BV(disp_dot);
+			break;
+		case 9:
+		case '9':
+			segments = (uint8_t)~(_BV(disp_e) | _BV(disp_dot));
+			break;
+	}
+	return (with_comma ? 0x80 : 0x00) | segments;
+}
+
 int main(void) {
 	uint8_t	count = 0;
 
 	uart_init(115200);
 	i2c_init(100000);
 	disp_init();
-	disp_set(disp_d4, 0xFF & ~_BV(disp_c) & ~_BV(disp_f));
+	disp_set(disp_d4, compose_segments(2, 1));
 	while (1);
 }
