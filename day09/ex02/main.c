@@ -79,6 +79,9 @@ void	disp_init() {
 
 void	disp_set(uint8_t digit, uint8_t segments) {
 	regs[EXP_OUT0_REG] |= 0x0F;
+	regs[EXP_OUT1_REG] = 0x00;
+	exp_write_register(EXP_OUT0_REG);
+	exp_write_register(EXP_OUT1_REG);
 	regs[EXP_OUT0_REG] &= ~_BV(digit);
 	regs[EXP_OUT1_REG] = segments;
 	exp_write_register(EXP_OUT0_REG);
